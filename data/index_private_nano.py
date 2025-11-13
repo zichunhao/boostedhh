@@ -167,6 +167,14 @@ def xrootd_index_private_nano(
                     if is_data:
                         ypath = base_dir / user / f"data_{year}"
                     else:
+                        # # TODO: use 2024 MC when it's ready
+                        # if year == "2024":
+                        #     warnings.warn(
+                        #         "2024 MC is not available yet, using 2023 MC instead. Please update when 2024 MC is ready.",
+                        #     )
+                        #     ypath = base_dir / user / f"mc_2023BPix"
+                        # else:
+                        #     ypath = base_dir / user / f"mc_{year}"
                         ypath = base_dir / user / f"mc_{year}"
                     
                     tsubsamples = _dirlist(fs, ypath) if subsamples is None else subsamples
@@ -227,6 +235,13 @@ def xrootd_index_private_nano(
 
                             # Handle MC case outside the f1 loop since it processes all files together
                             if not is_data:
+                                if "VBFHHto4B_CV-m2p12" in subsample_name or "VBFHHto4B_CV_m2p12" in subsample_name:
+                                    warnings.warn(
+                                        "Renaming subsample VBFHHto4B_CV-m2p12 to VBFHHto4B_CV-2p12 due to mislabelling in MC.",
+                                        stacklevel=2
+                                    )
+                                    subsample_name = subsample_name.replace("VBFHHto4B_CV-m2p12", "VBFHHto4B_CV-2p12")
+                                    subsample_name = subsample_name.replace("VBFHHto4B_CV_m2p12", "VBFHHto4B_CV_2p12")
                                 files[year][sample][subsample_name] = tfiles
                                 print(f"\t\t\t\t\t{len(tfiles)} files")
                                 
